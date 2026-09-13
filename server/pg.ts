@@ -517,11 +517,22 @@ export interface SupabaseStoreConfig {
 }
 
 /**
+ * 把用户粘贴的 Supabase 地址归一化成项目根地址：
+ *   https://xxx.supabase.co/            -> https://xxx.supabase.co
+ *   https://xxx.supabase.co/rest/v1/    -> https://xxx.supabase.co
+ * 控制台「Data API」页给的完整 REST 地址（含 /rest/v1）可以直接粘贴，
+ * 否则下面再拼一次 /rest/v1 会变成 /rest/v1/rest/v1 导致 404。
+ */
+export function normalizeSupabaseUrl(raw: string): string {
+  return raw.trim().replace(/\/+$/, '').replace(/\/rest\/v1$/i, '').replace(/\/+$/, '');
+}
+
+/**
  * Supabase 的 PostgREST 端点位于 `{url}/rest/v1`，
  * 且网关要求请求同时带 `apikey` 与 `Authorization` 两个头。
  */
 export function createSupabaseStore(config: SupabaseStoreConfig): PgStore {
-  const baseUrl = `${config.url.replace(/\/+$/, '')}/rest/v1`;
+  const baseUrl = `${normalizeSupabaseUrl(config.url)}/rest/v1`;
   return new PgStore(
     new PgRest({
       baseUrl,
