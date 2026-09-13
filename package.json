@@ -1,0 +1,44 @@
+{
+  "name": "tennis-tracker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "网球记录助手 - 高效管理您的网球训练",
+  "scripts": {
+    "dev": "vite",
+    "dev:api": "tsx watch server/index.ts",
+    "start:api": "node dist-server/server/index.js",
+    "build": "vue-tsc -b && vite build",
+    "build:api": "tsc -p tsconfig.server.json",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "lucide-vue-next": "^0.344.0",
+    "tdesign-icons-vue-next": "^0.3.6",
+    "tdesign-vue-next": "^1.13.1",
+    "vue": "^3.5.12",
+    "vue-echarts": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/supertest": "^6.0.3",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^24.1.3",
+    "postcss": "^8.5",
+    "supertest": "^7.0.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.19.3",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.9",
+    "vue-tsc": "^2.1.8"
+  }
+}

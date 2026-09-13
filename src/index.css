@@ -1,0 +1,130 @@
+/* 强制设置页面背景 */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #f0f9ff 100%) !important;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#app {
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #f0fdf4;
+    --foreground: #1a2e1a;
+    --card: #ffffff;
+    --card-foreground: #1a2e1a;
+    --primary: #56ab2f;
+    --primary-foreground: #ffffff;
+    --secondary: #1976d2;
+    --secondary-foreground: #ffffff;
+    --muted: #f0fdf4;
+    --muted-foreground: #64748b;
+    --accent: #a8e063;
+    --accent-foreground: #1a2e1a;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #56ab2f;
+    --radius: 0.5rem;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white/80 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply bg-tennis-green hover:bg-tennis-green-dark text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+  }
+  
+  .btn-secondary {
+    @apply bg-tennis-blue hover:bg-tennis-blue-dark text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-tennis-green focus:border-transparent transition-all duration-300;
+  }
+}
+
+/* 修复组件重叠问题 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+main {
+  padding-bottom: 6rem; /* 确保底部导航栏不会遮挡内容 */
+}
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #56ab2f, #1976d2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2e7d32, #0d47a1);
+}
+
+/* 自定义过渡动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Custom animations */
+@keyframes tennis-ball {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tennis-ball-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #56ab2f, #1976d2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 修复页面背景 */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+  min-height: 100vh;
+}

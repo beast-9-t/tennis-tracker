@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速修复 - 网球记录助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .status-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .status-box h2 {
+            color: #856404;
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-box p {
+            color: #856404;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .fix-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .fix-box h3 {
+            color: #155724;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step-content {
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .code {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(23, 162, 184, 0.4);
+        }
+
+        .success-message {
+            background: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            color: #0c5460;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎾 网球记录助手 - 快速修复</h1>
+
+        <div class="status-box">
+            <h2><span class="emoji">✅</span> 问题已修复！</h2>
+            <p><strong>错误：</strong> <code>border-border</code> 类不存在</p>
+            <p><strong>位置：</strong> src/index.css 第 26 行</p>
+            <p><strong>状态：</strong> 已替换为标准 CSS 代码</p>
+        </div>
+
+        <div class="fix-box">
+            <h3><span class="emoji">🔧</span> 立即修复步骤</h3>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>停止当前服务器</strong>
+                    <p>在命令行窗口中按 <code>Ctrl + C</code></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>重启开发服务器</strong>
+                    <p>运行以下命令：</p>
+                    <div class="code">npm run dev</div>
+                    <p>或者双击运行 <code>restart.bat</code> 文件</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>访问网站</strong>
+                    <p>在浏览器中打开：</p>
+                    <div class="code">http://localhost:5173</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <a href="http://localhost:5173" target="_blank" class="btn btn-success">
+                🚀 打开网站
+            </a>
+            <a href="file:///c:/Users/o/CodeBuddy/20260209102439/tennis-tracker/故障排除.md" target="_blank" class="btn btn-info">
+                📖 详细故障排除
+            </a>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <p><span class="emoji">🎉</span> 太棒了！网站应该已经可以正常显示了！</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>💡 提示：</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                <li>服务器启动后，命令行窗口会显示 <code>ready in xxx ms</code></li>
+                <li>如果页面没有显示，尝试按 <code>Ctrl + Shift + R</code> 强制刷新</li>
+                <li>如果还是有问题，请查看命令行窗口的错误信息</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px;">
+            <p>📂 项目位置：c:\Users\o\CodeBuddy\20260209102439\tennis-tracker</p>
+            <p style="margin-top: 10px;">📚 查看项目文档获取更多帮助</p>
+        </div>
+    </div>
+
+    <script>
+        // 检查是否可以访问 localhost:5173
+        function checkServer() {
+            fetch('http://localhost:5173', { mode: 'no-cors' })
+                .then(() => {
+                    document.getElementById('successMessage').classList.add('show');
+                })
+                .catch(() => {
+                    // 服务器可能未启动，这是正常的
+                    console.log('服务器未启动或无法访问');
+                });
+        }
+
+        // 2秒后检查服务器状态
+        setTimeout(checkServer, 2000);
+    </script>
+</body>
+</html>
