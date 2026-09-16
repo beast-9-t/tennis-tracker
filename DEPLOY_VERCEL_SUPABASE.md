@@ -62,9 +62,14 @@ Vercel 构建过程**不会**自动创建表。你必须手动执行 schema 脚�
    |---|---|---|
    | `SUPABASE_URL` | `https://xxxx.supabase.co` | 从第二步复制 |
    | `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` | 从第二步复制（**service_role 不是 anon**） |
-   | `NODE_ENV` | `production` | 显式设更稳 |
 
    > 三个环境（Production / Preview / Development）可以都勾选。建议 Production 必勾。
+
+   > ⚠️ **不要**再额外加 `NODE_ENV=production`。
+   > Vercel 运行时会自己把 `NODE_ENV` 置为 `production`，而一旦它出现在项目环境变量里，
+   > 依赖安装阶段会进入 production 模式、**跳过全部 `devDependencies`**（`vite`、`typescript`、
+   > `vue-tsc`、`@vitejs/plugin-vue` 都在 devDependencies 里），构建会在 `npm run build` 处直接失败。
+   > `vercel.json` 已写入 `"installCommand": "npm install --production=false"` 兜底，但最省事的做法是别设它。
 
 5. 点 **Deploy**，等待构建完成（约 1-3 分钟）。
 
@@ -145,6 +150,40 @@ https://你的app.vercel.app
 ### Q5: 怎么回滚到上一个版本？
 
 Vercel → Deployments → 选一个之前的成功部署 → 右上角菜单 → **Promote to Production**。
+
+### Q6: 页面能打开，但注册报「请求失败」，而且 Logs 里一条请求都没有？
+
+这个组合（**前端正常 + 后端零日志**）几乎只有一个解释：**API 函数压根没部署上去**，
+请求在 Vercel 平台层就被 404 掉了，根本没进入函数，所以不会有任何运行日志。
+前端拿到的是一段非 JSON 的 404 页面，只能显示兜底文案。
+
+一步确认（把域名换成你自己的）：
+
+```bash
+curl -i https://你的app.vercel.app/api/v1/health
+```
+
+| 结果 | 含义 | 处理 |
+|---|---|---|
+| `200` + `{"data":{"status":"ok","store":"supabase"}}` | 后端正常 | 继续查浏览器 Network |
+| `404` + 响应头 `X-Vercel-Error: NOT_FOUND` | 函数不存在，部署没成功 | 看下面 |
+| `500` | 函数在，但启动就抛错（多为环境变量/建表缺失） | 看 Runtime Logs 首条错误 |
+
+遇到 `X-Vercel-Error: NOT_FOUND` 时按顺序排查：
+
+1. **Deployments 里最近一次部署是不是红色 Error**。若是，点进去看 Build Logs：
+   - 报 `vite: not found` / `vue-tsc: not found` / TypeScript 相关缺失 → 就是上面的 `NODE_ENV=production` 陷阱；
+   - 报 `The pattern ... doesn't match any Serverless Functions` → `functions` 路径写错了，本仓库用 `api/**/*.js`，别改成写死的文件路径。
+2. **确认最新一次成功部署确实包含 `api/[...path].js`**。旧的成功部署会被继续对外服务，容易被误认为"部署更新了"。
+3. **确认 `dist-server/` 有产物**。它是 `.gitignore` 里的构建产物，由 `vercel.json` 的
+   `buildCommand`（`npm run build && npm run build:api`）在 Vercel 侧生成，本地不用提交；
+   但如果你在 Dashboard 里手工覆盖过 Build Command，只留了 `npm run build`，函数就会因为
+   `import '../dist-server/server/vercel.js'` 找不到文件而挂掉。
+4. 修好后 **Redeploy**（Deployments → 最近一次 → 右上角 → Redeploy，勾选 clear build cache），
+   再跑一遍上面的 `curl`。
+
+> 一句话：前端是"最后一次成功部署"在服务，后端 404 说明"最近一次部署失败了"，
+> 两者并不矛盾——Vercel 不会因为新部署失败而撤掉旧站点。
 
 ---
 

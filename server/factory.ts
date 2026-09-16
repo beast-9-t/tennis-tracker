@@ -57,7 +57,11 @@ export function createStoreFromEnv(options: StoreFactoryOptions = {}): DataStore
   }
 
   // Serverless / 容器实例的本地磁盘不持久化，生产环境必须显式接数据库。
-  if (env.NODE_ENV === 'production' && !env.DATA_STORE?.trim()) {
+  // Vercel 运行时会自动注入 VERCEL / VERCEL_ENV，这里一并视为生产环境：
+  // 即使忘了设 NODE_ENV，也不会静默退化成「写临时 JSON 文件」，而是直接报错暴露配置缺失。
+  // （不要把 NODE_ENV=production 写进 Vercel 环境变量：安装依赖时会跳过 devDependencies，
+  //   导致 vite / typescript 缺失、构建直接失败，改用 installCommand 兜底。）
+  if (!env.DATA_STORE?.trim() && (env.NODE_ENV === 'production' || env.VERCEL || env.VERCEL_ENV)) {
     throw new Error('生产环境必须配置数据库：请设置 SUPABASE_URL 与 SUPABASE_SERVICE_ROLE_KEY');
   }
 

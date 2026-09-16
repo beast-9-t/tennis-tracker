@@ -18,13 +18,25 @@ function setAccessToken(token: string) {
   accessToken = token;
 }
 
+/**
+ * 兜底错误文案。
+ * 关键点：当后端函数根本没部署时，平台会返回 HTML 形式的 404（X-Vercel-Error: NOT_FOUND），
+ * 响应体不是 JSON，此时若只提示「请求失败，请稍后重试」会把「接口不存在」误报成「偶发失败」。
+ * 这里带上状态码，404 额外给出可自查的地址。
+ */
+function fallbackMessage(response: Response, body: ApiErrorBody) {
+  if (body.error?.message) return body.error.message;
+  if (response.status === 404) return '接口不存在（HTTP 404），后端服务未部署，请先访问 /api/v1/health 自检';
+  return `请求失败（HTTP ${response.status}），请稍后重试`;
+}
+
 async function parseResponse<T>(response: Response): Promise<T> {
   const body = await response.json().catch(() => ({})) as { data?: T } & ApiErrorBody;
   if (!response.ok) {
     throw new ApiError(
       response.status,
-      body.error?.code || 'REQUEST_FAILED',
-      body.error?.message || '请求失败，请稍后重试',
+      body.error?.code || (response.status === 404 ? 'NOT_FOUND' : 'REQUEST_FAILED'),
+      fallbackMessage(response, body),
     );
   }
   return body.data as T;
@@ -36,7 +48,7 @@ async function parsePageResponse<T>(response: Response): Promise<{ data: T; page
     page?: { nextCursor: string | null; hasMore: boolean };
   } & ApiErrorBody;
   if (!response.ok) {
-    throw new ApiError(response.status, body.error?.code || 'REQUEST_FAILED', body.error?.message || '请求失败，请稍后重试');
+    throw new ApiError(response.status, body.error?.code || 'REQUEST_FAILED', fallbackMessage(response, body));
   }
   return { data: body.data as T, page: body.page ?? { nextCursor: null, hasMore: false } };
 }
