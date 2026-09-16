@@ -3,6 +3,11 @@
   "framework": "vite",
   "buildCommand": "npm run build && npm run build:api",
   "outputDirectory": "dist",
+  "functions": {
+    "api/[...path].js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

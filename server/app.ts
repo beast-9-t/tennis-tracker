@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { resolve } from 'node:path';
 import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { createToken, hashPassword, verifyPassword } from './security.js';
@@ -211,6 +212,11 @@ function isSameOrigin(origin: string, host: string | undefined): boolean {
 export interface CreateAppOptions {
   /** 数据存储驱动名，仅用于 /health 自检输出。 */
   storeName?: string;
+  /**
+   * 前端构建产物目录。传入后由 Express 同源托管静态资源，供“自托管”部署（云服务器）使用；
+   * Serverless 平台（Vercel 等）不传，静态资源交给平台 CDN。
+   */
+  staticDir?: string;
 }
 
 export function createApp(store: DataStore, options: CreateAppOptions = {}) {
@@ -322,7 +328,9 @@ export function createApp(store: DataStore, options: CreateAppOptions = {}) {
       res.cookie('tennis_refresh_token', session.refreshToken, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        // 跟随实际协议：HTTPS 下加 Secure，纯 HTTP 自托管（http://IP）下不加，
+        // 否则浏览器会拒绝保存刷新令牌，导致刷新页面即掉线。
+        secure: req.secure,
         maxAge: REFRESH_TTL_MS,
         path: '/api/v1/auth',
       });
@@ -354,7 +362,9 @@ export function createApp(store: DataStore, options: CreateAppOptions = {}) {
       res.cookie('tennis_refresh_token', session.refreshToken, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        // 跟随实际协议：HTTPS 下加 Secure，纯 HTTP 自托管（http://IP）下不加，
+        // 否则浏览器会拒绝保存刷新令牌，导致刷新页面即掉线。
+        secure: req.secure,
         maxAge: REFRESH_TTL_MS,
         path: '/api/v1/auth',
       });
@@ -377,7 +387,9 @@ export function createApp(store: DataStore, options: CreateAppOptions = {}) {
       res.cookie('tennis_refresh_token', session.refreshToken, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        // 跟随实际协议：HTTPS 下加 Secure，纯 HTTP 自托管（http://IP）下不加，
+        // 否则浏览器会拒绝保存刷新令牌，导致刷新页面即掉线。
+        secure: req.secure,
         maxAge: REFRESH_TTL_MS,
         path: '/api/v1/auth',
       });
@@ -948,6 +960,20 @@ export function createApp(store: DataStore, options: CreateAppOptions = {}) {
       next(error);
     }
   });
+
+  // ── 自托管（云服务器）时同源托管前端构建产物 ──
+  // Serverless 平台不传 staticDir，静态资源由平台 CDN 负责，这里直接跳过。
+  if (options.staticDir) {
+    const staticDir = options.staticDir;
+    app.use(express.static(staticDir, {
+      index: 'index.html',
+      // 构建产物文件名带 hash 可长缓存；入口 HTML 每次回源，避免发版后用户拿到旧壳。
+      maxAge: '7d',
+      setHeaders: (staticRes, filePath) => {
+        if (filePath.endsWith('index.html')) staticRes.setHeader('cache-control', 'no-cache');
+      },
+    }));
+  }
 
   app.use((_req, _res, next) => next(new ApiError(404, 'NOT_FOUND', '接口不存在')));
   app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {

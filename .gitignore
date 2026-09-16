@@ -32,3 +32,6 @@ data/*.json
 *.njsproj
 *.sln
 *.sw?
+
+# AI 编辑器工具目录（CloudBase 规则等，与项目代码无关，不纳入版本管理）
+.codebuddy/

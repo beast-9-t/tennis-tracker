@@ -2,9 +2,15 @@
 
 一个美观、高效的网球训练记录应用，帮助你管理网球训练并追踪进步。
 
-## 部署说明
+## 🚀 部署到生产环境？
 
-旧 CloudBase 地址仅包含历史静态前端，不能运行当前服务端版本。正式部署时需要同时部署前端产物和 Node API，并配置 `VITE_API_BASE_URL`、`API_PORT`、`DATA_FILE`、`CORS_ORIGINS` 等环境变量。
+**👉 请阅读 [`DEPLOY_VERCEL_SUPABASE.md`](./DEPLOY_VERCEL_SUPABASE.md)** —— 这是当前唯一的权威部署指南（前端 + API 在 Vercel，数据库在 Supabase，约 15 分钟跑完）。
+
+> ⚠️ 本文后续章节描述的是**本地开发**流程（Vite + Express + JSON 持久化），仅供开发与测试参考，与生产部署无关。
+
+## 部署说明（历史参考）
+
+旧 CloudBase 地址仅包含历史静态前端，不能运行当前服务端版本。如需历史参考资料，请看 `DEPLOY_VERCEL_SUPABASE.md` 之外的所有旧 .md 文档。
 
 ## 功能特性
 
