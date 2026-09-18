@@ -10,7 +10,7 @@
     "start:api": "node dist-server/server/index.js",
     "build": "vue-tsc -b && vite build",
     "build:api": "tsc -p tsconfig.server.json",
-    "vercel-build": "npm run build && npm run build:api",
+    "vercel-build": "npm run build",
     "preview": "vite preview",
     "test": "vitest run"
   },
